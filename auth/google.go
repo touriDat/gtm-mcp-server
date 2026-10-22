@@ -16,11 +16,15 @@ type GoogleProvider struct {
 }
 
 // GoogleScopes defines the scopes needed for GTM API access.
+//
+// touriDat fork: reduced scope set. The upstream scopes
+// tagmanager.delete.containers and tagmanager.manage.accounts are
+// intentionally NOT requested, so a leaked token cannot delete containers
+// or manage accounts/user permissions. Tools relying on them (e.g.
+// delete_container, update_account) will be rejected by Google.
 var GoogleScopes = []string{
-	"https://www.googleapis.com/auth/tagmanager.delete.containers",
 	"https://www.googleapis.com/auth/tagmanager.edit.containers",
 	"https://www.googleapis.com/auth/tagmanager.edit.containerversions",
-	"https://www.googleapis.com/auth/tagmanager.manage.accounts",
 	"https://www.googleapis.com/auth/tagmanager.publish",
 }
 
