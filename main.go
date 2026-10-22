@@ -77,9 +77,16 @@ func main() {
 	// getClient() already resolves credentials from the context, so no tool
 	// changes are needed.
 	// Create HTTP handler for MCP
+	//
+	// touriDat fork: run in stateless mode. go-sdk only accepts MCP protocol
+	// version 2026-07-28 (SEP-2575, used by current ChatGPT connectors) on
+	// stateless HTTP servers; in stateful mode server/discover succeeds but the
+	// follow-up tools/list is rejected with HTTP 400. Legacy clients (initialize
+	// handshake, e.g. Claude) keep working; every request carries its own bearer
+	// token, so no server-side session state is needed.
 	mcpHandler := mcp.NewStreamableHTTPHandler(func(r *http.Request) *mcp.Server {
 		return server
-	}, nil)
+	}, &mcp.StreamableHTTPOptions{Stateless: true})
 
 	// Set up HTTP routes
 	mux := http.NewServeMux()
